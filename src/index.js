@@ -1,3 +1,5 @@
 import './css/main.scss';
 
-console.log('test');
+import Search from './js/search';
+
+new Search('.search');

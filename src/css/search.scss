@@ -1,0 +1,82 @@
+@import './variables.scss';
+
+@keyframes Spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.search {
+    width: 456px;
+    max-width: 100%;
+    position: relative;
+
+    &__icon {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 16px;
+        height: 16px;
+        background: url('../assets/search-icon.svg') center no-repeat;
+        background-size: cover;
+        pointer-events: none;
+    }
+
+    &__input {
+        width: 100%;
+        height: 48px;
+        padding: 14px 46px;
+
+        border: 2px solid $color-grey-light;
+        border-radius: 100px;
+
+        box-sizing: border-box;
+        outline: none;
+
+        &::placeholder {
+            color: $color-dark;
+        }
+
+        &:focus {
+            border-color: $color-accent;
+        }
+    }
+
+    &__spinner,
+    &__clear {
+        display: none;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 16px;
+        height: 16px;
+        background-size: cover;
+
+        &_visible {
+            display: block;
+        }
+    }
+
+    &__spinner {
+        background: url('../assets/spinner-icon.svg') center no-repeat;
+        animation: Spin 1s infinite;
+        pointer-events: none;
+    }
+
+    &__clear {
+        background: url('../assets/cross-icon.svg') center no-repeat;
+        cursor: pointer;
+    }
+
+    &__results {
+        display: none;
+
+        &_visible {
+            display: block;
+        }
+    }
+}

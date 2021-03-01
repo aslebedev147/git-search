@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>GitHub Repositories Search</title>
-    <link rel="stylesheet" href="main.css">
-    <script src="main.js"></script>
-  </head>
-  <body>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <title>GitHub Repositories Search</title>
+        <link rel="stylesheet" href="main.css">
+        <script src="main.js" defer></script>
+    </head>
+    <body>
+        <header class="header">
+            <div class="search">
+                <div class="search__field">
+                    <div class="search__icon"></div>
+                    <input class="search__input" type="text" placeholder="Type anything..."></input>
+                    <div class="search__spinner"></div>
+                    <div class="search__clear"></div>
+                </div>
+                <ul class="search__results"></ul>
+            </div>
+        </header>
+    </body>
 </html>
