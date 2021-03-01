@@ -1,12 +1,30 @@
-const path = require('path')
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: 'production',
-    entry: {
-        main: path.resolve(__dirname, './src/index.js'),
+    plugins: [
+        new MiniCssExtractPlugin(),
+        new CopyPlugin({
+            patterns: [
+              { from: "src/*.html", to: "[name].[ext]" },
+            ],
+          })
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.(scss|css)$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+            }
+        ]
     },
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        filename: '[name].bundle.js',
+    devServer: {
+        contentBase: path.resolve(__dirname, './dist'),
+        open: true,
+        compress: true,
+        hot: true,
+        port: 8080
     }
 }
