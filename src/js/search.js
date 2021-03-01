@@ -24,6 +24,7 @@ class Search {
         this.resultsList = this.element.querySelector(Selector.resultsList);
 
         this.keyword = '';
+        this.repos = [];
         this.results = [];
         this.loading = false;
         this.addEventListeners();
@@ -37,10 +38,10 @@ class Search {
 
         loadOrganisationRepos(Organisation).then(results => {
             if (results.length > 0) {
-                self.results = results;
+                self.repos = results;
                 self.loading = false;
                 self.spinnerIcon.classList.remove(Class.spinnerIconVisible);
-                self.updateResults();
+                self.update();
             } else {
                 self.loadRepos();
             }
@@ -54,10 +55,16 @@ class Search {
             const value = (event.target.value || '').trim();
             self.keyword = value;
 
-            if (value.length > 2 && self.results.length === 0 && !self.loading) {
+            if (value.length > 2 && self.repos.length === 0 && !self.loading) {
                 self.loadRepos();
             } else {
-                self.updateResults();
+                self.update();
+            }
+        });
+
+        this.input.addEventListener('focus', () => {
+            if (self.results.length > 0) {
+                self.showResults();
             }
         });
 
@@ -65,11 +72,17 @@ class Search {
             self.input.focus();
             self.keyword = '';
             self.input.value = '';
-            self.updateResults();
+            self.update();
+        });
+
+        document.body.parentElement.addEventListener('click', event => {
+            if (self.element !== event.target && !self.element.contains(event.target)) {
+                self.hideResults();
+            }
         });
     }
 
-    updateResults() {
+    update() {
         if (this.keyword.length > 0 && !this.loading) {
             this.clearIcon.classList.add(Class.clearIconVisible);
         } else {
@@ -77,7 +90,7 @@ class Search {
         }
 
         if (this.keyword.length > 2) {
-            this.showResults(this.filterResults(this.keyword));
+            this.updateResults(this.sortResults(this.filterResults(this.keyword)));
         } else {
             this.hideResults();
             this.clearResults();
@@ -85,7 +98,16 @@ class Search {
     }
 
     filterResults(keyword) {
-        return this.results.filter(result => result.full_name.indexOf(keyword) !== -1);
+        return this.repos.filter(result => result.name.indexOf(keyword) !== -1);
+    }
+
+    sortResults(results) {
+        results.sort((a, b) => a.name.localeCompare(b.name));
+        return results;
+    }
+
+    showResults() {
+        this.resultsList.classList.add(Class.resultsVisible);
     }
 
     hideResults() {
@@ -93,20 +115,26 @@ class Search {
     }
 
     clearResults() {
+        this.results = [];
         this.resultsList.innerHTML = '';
     }
 
-    showResults() {
-        const self = this;
+    updateResults(results) {
+        this.hideResults();
         this.clearResults();
+        this.results = results;
+        
+        if (results.length > 0) {
+            const self = this;
 
-        this.results.forEach(item => {
-            const element = document.createElement('li');
-            element.innerText = item.full_name;
-            self.resultsList.appendChild(element);
-        });
+            results.forEach(item => {
+                const element = document.createElement('li');
+                element.innerText = item.name;
+                self.resultsList.appendChild(element);
+            });
 
-        this.resultsList.classList.add(Class.resultsVisible);
+            this.showResults();
+        }
     }
 }
 
